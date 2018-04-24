@@ -1,0 +1,50 @@
+<!doctype html>
+<meta charset="utf8">
+<style>
+canvas { border: 1px solid red; }
+</style>
+<body>
+
+width <input name="width" value="600"><br>
+height <input name="height" value="400"><br>
+text <textarea name="text"></textarea><br>
+filename <input name="filename" value="factual.png"><br>
+<button id="render">render</button><br><br>
+
+<canvas id="cnv" width="32" height="32"></canvas><br><br>
+<a id="download" download="Canvas.png" href="#">Download</a>
+
+<script src="https://unpkg.com/jquery"></script>
+<script>
+
+function render() {
+  var width = +$('[name=width]').val();
+  var height = +$('[name=height]').val();
+  var filename = $('[name=filename]').val();
+
+  var canvas = $("#cnv")[0];
+  $(canvas).attr({width: width, height: height});
+  var ctx = canvas.getContext("2d");
+
+  ctx.clearRect(0, 0, width, height);
+
+  function r(ctx, x, y, w, h, c) {
+    ctx.beginPath();
+    ctx.rect(x, y, w, h);
+    ctx.strokeStyle = c;
+    ctx.stroke();
+  }
+  r(ctx, 0, 0, 32, 32, "black");
+  r(ctx, 4, 4, 16, 16, "red");
+  r(ctx, 8, 8, 16, 16, "green");
+  r(ctx, 12, 12, 16, 16, "blue");
+
+  var dt = canvas.toDataURL('image/png');
+  dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
+  dt = dt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=' + $('#download').attr('download'));
+  $('#download').attr('href', dt);
+  $('#download').attr('download', filename);
+}
+
+$('#render').click(render);
+</script>
