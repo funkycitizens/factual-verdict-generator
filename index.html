@@ -1,12 +1,19 @@
-<!doctype html>
-<meta charset="utf8">
+<!DOCTYPE html>
+<html><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 <style>
-canvas { border: 1px solid red; }
+canvas { border: 1px solid black; }
 </style>
-<body>
+<style></style></head><body>
 
-width <input name="width" value="600"><br>
-height <input name="height" value="400"><br>
+width <input name="width" value="960"><br>
+height <input name="height" value="960"><br>
+Declarație: <select id="decl">
+  <option value="#E6383F">Fals</option>
+  <option value="#F08283">Parțial fals</option>
+  <option value="#373737">Neutru</option>
+  <option value="#9FD6D0">Parțial adv.</option>
+  <option value="#27B198">Adevărat</option>
+</select><br>
 text <textarea name="text"></textarea><br>
 filename <input name="filename" value="factual.png"><br>
 <button id="render">render</button><br><br>
@@ -21,6 +28,7 @@ function render() {
   var width = +$('[name=width]').val();
   var height = +$('[name=height]').val();
   var filename = $('[name=filename]').val();
+  var decl = $('#decl').val();
 
   var canvas = $("#cnv")[0];
   $(canvas).attr({width: width, height: height});
@@ -39,6 +47,16 @@ function render() {
   r(ctx, 8, 8, 16, 16, "green");
   r(ctx, 12, 12, 16, 16, "blue");
 
+  ctx.fillStyle = decl;
+  ctx.fillRect(0, 0, width, width*12/100); // Top rect
+  ctx.fillRect(0, height-30, width, 30); // Bottom full width rect
+  ctx.fillRect(width-420, height-90, width, 90); // Bottom upper-right rect
+  ctx.moveTo(width-420, height-90); // I'm
+  ctx.lineTo(width-460, height-30); // Losing
+  ctx.lineTo(width-420, height-30); // It
+  ctx.fill();
+
+
   var dt = canvas.toDataURL('image/png');
   dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
   dt = dt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=' + $('#download').attr('download'));
@@ -48,3 +66,4 @@ function render() {
 
 $('#render').click(render);
 </script>
+</body></html>
