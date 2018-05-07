@@ -5,19 +5,15 @@ canvas { border: 1px solid black; }
 </style>
 <style></style></head><body>
 
-width <input name="width" value="960"><br>
-height <input name="height" value="960"><br>
 Declarație: <select id="decl">
   <option value="#E6383F">Fals</option>
   <option value="#F08283">Parțial fals</option>
   <option value="#373737">Neutru</option>
   <option value="#9FD6D0">Parțial adv.</option>
   <option value="#27B198">Adevărat</option>
-</select><br>
-
-<input type="file"><br>
-
-text <textarea name="text"></textarea><br>
+</select>;
+Link poza: <input name="url-poza" value="https://www141.lunapic.com/editor/working/152570592839857240?2361468011">;</br>
+Citat: <textarea name="quote" rows="3" cols="45">E important să ştim cu cine vorbim şi dacă mă uit la tine să ştiu că tu eşti tu.</textarea><br>
 filename <input name="filename" value="factual.png"><br>
 <button id="render">render</button><br><br>
 
@@ -28,12 +24,11 @@ filename <input name="filename" value="factual.png"><br>
 <script>
 
 function render() {
-  var width = +$('[name=width]').val();
-  var height = +$('[name=height]').val();
+  var width = 960;
+  var height = 960;
   var filename = $('[name=filename]').val();
   var decl = $('#decl').val();
-  var facepic = document.querySelector('input[type=file]').files[0];
-  var reader = new FileReader();
+  var quote = $('[name=quote]').val();
 
   var canvas = $("#cnv")[0];
   $(canvas).attr({width: width, height: height});
@@ -66,27 +61,42 @@ function render() {
     ctx.drawImage(paleta, 780, 57) }, false);
   paleta.src = 'paleta.png';
 
-  var img=new Image();
-  img.onload = drawBall;
-  img.src=reader.readAsDataURL(facepic);
+  var poza = new Image();
+  poza.addEventListener('load', function() {
+    ctx.drawImage(poza, 50, 170, 230, 230) }, false);
+  poza.src = $('[name=url-poza]').val();
 
-  function drawBall(facepic) {
-    c.width = this.width;
-    c.height = this.height;
-  
-    // default gCO is source-over
-    ctx.drawImage(img,-250,-200, img.width*.7, img.height*.7);
-    // now we change the gCO
-    ctx.globalCompositeOperation='destination-in';
-    ctx.beginPath();
-    ctx.arc(75, 75, 50, 0, Math.PI*2);
-    ctx.fillStyle = "#0095DD";
-    ctx.fill();
-    // reset to default
-    ctx.globalCompositeOperation='source-over';
-    // closePath is useless here
-    //ctx.closePath();
-  }
+//spagetti from the internet for a textarea
+    function wrapText(context, text, x, y, maxWidth, lineHeight) {
+      var words = text.split(' ');
+      var line = '';
+
+      for(var n = 0; n < words.length; n++) {
+        var testLine = line + words[n] + ' ';
+        var metrics = ctx.measureText(testLine);
+        var testWidth = metrics.width;
+        if (testWidth > maxWidth && n > 0) {
+          ctx.fillText(line, x, y);
+          line = words[n] + ' ';
+          y += lineHeight;
+        }
+        else {
+          line = testLine;
+        }
+      }
+      ctx.fillText(line, x, y);
+    }
+
+    var maxWidth = 855;
+    var lineHeight = 250;
+    var x = 60;
+    var y = 445;
+    var text = quote;
+
+    ctx.font = 'italic 16pt Calibri';
+    ctx.fillStyle = '#333';
+
+    wrapText(ctx, text, x, y, maxWidth, lineHeight);
 
   var dt = canvas.toDataURL('image/png');
   dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
