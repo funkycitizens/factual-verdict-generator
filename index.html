@@ -6,14 +6,24 @@ canvas { border: 1px solid black; }
 <style></style></head><body>
 
 Declarație: <select id="decl">
-  <option value="#E6383F">Fals</option>
-  <option value="#F08283">Parțial fals</option>
-  <option value="#373737">Neutru</option>
-  <option value="#9FD6D0">Parțial adv.</option>
-  <option value="#27B198">Adevărat</option>
+  <option value="#E6383F">FALS</option>
+  <option value="#F08283">PARȚIAL FALS</option>
+  <option value="#373737">NEUTRU</option>
+  <option value="#9FD6D0">PARȚIAL ADEVĂRAT</option>
+  <option value="#27B198">ADEVĂRAT</option>
 </select>;
+
 Link poza: <input name="url-poza" value="https://www141.lunapic.com/editor/working/152570592839857240?2361468011">;</br>
+
 Citat: <textarea name="quote" rows="3" cols="45">E important să ştim cu cine vorbim şi dacă mă uit la tine să ştiu că tu eşti tu.</textarea><br>
+
+Nume: <input name="nume" value="Liviu Dragnea">; 
+
+Funcție: <input name="functie" value="Futător de stat paralelipied">; 
+
+Data și sursa: <input name="datasursa" value="31.02.0000 | hoțnews.ro">;
+
+<br>
 filename <input name="filename" value="factual.png"><br>
 <button id="render">render</button><br><br>
 
@@ -29,6 +39,10 @@ function render() {
   var filename = $('[name=filename]').val();
   var decl = $('#decl').val();
   var quote = $('[name=quote]').val();
+  var nume = $('[name=nume]').val();
+  var functie = $('[name=functie]').val();
+  var datasursa = $('[name=datasursa]').val();
+  var decltxt = $('#decl option:selected').text();
 
   var canvas = $("#cnv")[0];
   $(canvas).attr({width: width, height: height});
@@ -93,10 +107,23 @@ function render() {
     var y = 445;
     var text = quote;
 
-    ctx.font = 'italic 16pt Calibri';
+    ctx.font = 'italic 16pt Arial';
     ctx.fillStyle = '#333';
 
     wrapText(ctx, text, x, y, maxWidth, lineHeight);
+
+  ctx.font = "bold 19pt Arial";
+  ctx.fillText(nume, 60, 650);
+
+  ctx.font = "18pt Arial";
+  ctx.fillText(functie, 60, 680);
+
+  ctx.font = "14pt Arial";
+  ctx.fillText(datasursa, 60, 910);
+
+  ctx.font = "bold 22pt Arial";
+  ctx.fillStyle= "white";
+  ctx.fillText(decltxt, 620, 920);
 
   var dt = canvas.toDataURL('image/png');
   dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
