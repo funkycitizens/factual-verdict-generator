@@ -13,7 +13,7 @@ Declarație: <select id="decl">
   <option value="#27B198">ADEVĂRAT</option>
 </select>;
 
-Link poza: <input name="url-poza" value="https://www141.lunapic.com/editor/working/152570592839857240?2361468011">;</br>
+Link poza: <input name="url-poza" value="https://i.imgur.com/dbK1dCy.gif">;</br>
 
 Citat: <textarea name="quote" rows="3" cols="45">E important să ştim cu cine vorbim şi dacă mă uit la tine să ştiu că tu eşti tu.</textarea><br>
 
@@ -25,7 +25,7 @@ Data și sursa: <input name="datasursa" value="31.02.0000 | hoțnews.ro">;
 
 <br>
 filename <input name="filename" value="factual.png"><br>
-<button id="render">render</button><br><br>
+<button id="render" target="_blank">render</button><br><br>
 
 <canvas id="cnv" width="32" height="32"></canvas><br><br>
 <a id="download" download="Canvas.png" href="#">Download</a>
@@ -34,15 +34,16 @@ filename <input name="filename" value="factual.png"><br>
 <script>
 
 function render() {
-  var width = 960;
-  var height = 960;
+  var width = 660;
+  var height = 660;
   var filename = $('[name=filename]').val();
   var decl = $('#decl').val();
   var quote = $('[name=quote]').val();
   var nume = $('[name=nume]').val();
   var functie = $('[name=functie]').val();
   var datasursa = $('[name=datasursa]').val();
-  var decltxt = $('#decl option:selected').text();
+  var verdict = $('#decl option:selected').text();
+  var verdpoz = 700 - verdict.length / 2;
 
   var canvas = $("#cnv")[0];
   $(canvas).attr({width: width, height: height});
@@ -61,26 +62,31 @@ function render() {
   r(ctx, 8, 8, 16, 16, "green");
   r(ctx, 12, 12, 16, 16, "blue");
 
+  ctx.fillStyle = "white";
+  ctx.fillRect(0, 0, width, height);
+
   ctx.fillStyle = decl;
-  ctx.fillRect(0, 0, width, width*12/100);
-  ctx.fillRect(0, height-30, width, 30);
-  ctx.fillRect(width-420, height-90, width, 90);
-  ctx.moveTo(width-420, height-90); 
-  ctx.lineTo(width-460, height-30);
-  ctx.lineTo(width-420, height-30);
+  ctx.fillRect(0, 0, width, width*10/100);
+  ctx.fillRect(0, height-20, width, 20);
+  ctx.fillRect(width-280, height-70, width, 70);
+  ctx.moveTo(width-280, height-70); 
+  ctx.lineTo(width-240, height-20);
+  ctx.lineTo(width-320, height-20);
   ctx.fill();
 
   var paleta = new Image();
   paleta.addEventListener('load', function() {
-    ctx.drawImage(paleta, 780, 57) }, false);
+    ctx.drawImage(paleta, 510, 16) }, false);
   paleta.src = 'paleta.png';
 
   var poza = new Image();
   poza.addEventListener('load', function() {
-    ctx.drawImage(poza, 50, 170, 230, 230) }, false);
+    ctx.drawImage(poza, 35, 110, 190, 190) }, false);
   poza.src = $('[name=url-poza]').val();
 
 //spagetti from the internet for a textarea
+  var totalLines = 1;
+
     function wrapText(context, text, x, y, maxWidth, lineHeight) {
       var words = text.split(' ');
       var line = '';
@@ -93,6 +99,7 @@ function render() {
           ctx.fillText(line, x, y);
           line = words[n] + ' ';
           y += lineHeight;
+	  totalLines = totalLines + 1;
         }
         else {
           line = testLine;
@@ -101,36 +108,40 @@ function render() {
       ctx.fillText(line, x, y);
     }
 
-    var maxWidth = 855;
-    var lineHeight = 250;
-    var x = 60;
-    var y = 445;
+    var maxWidth = 595;
+    var lineHeight = 20;
+    var x = 35;
+    var y = 345;
     var text = quote;
 
-    ctx.font = 'italic 16pt Arial';
+    ctx.font = 'italic 14pt Arial';
     ctx.fillStyle = '#333';
 
     wrapText(ctx, text, x, y, maxWidth, lineHeight);
 
-  ctx.font = "bold 19pt Arial";
-  ctx.fillText(nume, 60, 650);
+  var endQuote = totalLines*20 + 355;
 
-  ctx.font = "18pt Arial";
-  ctx.fillText(functie, 60, 680);
+  ctx.font = "bold 14pt Arial";
+  ctx.fillText(nume, 35, endQuote);
 
-  ctx.font = "14pt Arial";
-  ctx.fillText(datasursa, 60, 910);
+  ctx.font = "12pt Arial";
+  ctx.fillText(functie, 35, totalLines*20+375);
 
-  ctx.font = "bold 22pt Arial";
+  ctx.font = "10pt Arial";
+  ctx.fillText(datasursa, 35, 632);
+
+  ctx.font = "bold 15pt Arial";
   ctx.fillStyle= "white";
-  ctx.fillText(decltxt, 620, 920);
+  ctx.fillText(verdict, (500-verdict.length*6), 630);
 
   var dt = canvas.toDataURL('image/png');
   dt = dt.replace(/^data:image\/[^;]*/, 'data:application/octet-stream');
   dt = dt.replace(/^data:application\/octet-stream/, 'data:application/octet-stream;headers=Content-Disposition%3A%20attachment%3B%20filename=' + $('#download').attr('download'));
   $('#download').attr('href', dt);
   $('#download').attr('download', filename);
+ 
 }
+
 
 $('#render').click(render);
 </script>
